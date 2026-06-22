@@ -17,7 +17,7 @@ export class PetRepository {
   }
 
   findById(id: string) {
-    return this.prisma.pet.findUnique({ where: { id }, include: { owner: true, medicalRecords: true, vaccineRecords: true, policies: true } });
+    return this.prisma.pet.findUnique({ where: { id }, include: { owner: true, medicalRecords: { include: { medications: true } }, vaccineRecords: true, policies: true, medications: { include: { medicalRecord: true }, orderBy: { startDate: 'desc' } } } });
   }
 
   create(data: Prisma.PetUncheckedCreateInput) {

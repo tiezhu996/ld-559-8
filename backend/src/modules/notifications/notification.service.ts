@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { addDays } from '../../utils/date';
 import { PrismaService } from '../../prisma/prisma.service';
+import { MedicationRepository } from '../medications/medication.repository';
 
 @Injectable()
 export class NotificationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly medicationRepo: MedicationRepository,
+  ) {}
 
   list(userId: string) {
     return this.prisma.notification.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } });
@@ -46,6 +50,18 @@ export class NotificationService {
           title: '保单即将续保',
           content: `${policy.pet.name} 的 ${policy.provider} 保单即将到期`,
           type: 'INSURANCE',
+        },
+      }).catch(() => undefined);
+    }
+
+    const medications = await this.medicationRepo.findUpcomingEndDates(now, 7);
+    for (const med of medications) {
+      await this.prisma.notification.create({
+        data: {
+          userId: med.pet.ownerId,
+          title: '用药即将到期',
+          content: `${med.pet.name} 的 ${med.name} 用药即将结束，请及时复诊`,
+          type: 'MEDICATION',
         },
       }).catch(() => undefined);
     }

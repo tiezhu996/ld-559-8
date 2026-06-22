@@ -14,7 +14,7 @@ export class MedicalRepository {
       ...(petId ? { petId } : {}),
       ...(type ? { type: type as any } : {}),
     };
-    return this.prisma.medicalRecord.findMany({ where, include: { pet: true, vet: true, clinic: true }, orderBy: { visitDate: 'desc' } });
+    return this.prisma.medicalRecord.findMany({ where, include: { pet: true, vet: true, clinic: true, medications: true }, orderBy: { visitDate: 'desc' } });
   }
 
   create(data: Prisma.MedicalRecordUncheckedCreateInput) {

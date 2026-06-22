@@ -17,6 +17,9 @@ import { VaccineRepository } from './modules/vaccines/vaccine.repository';
 import { InsuranceController } from './modules/insurance/insurance.controller';
 import { InsuranceService } from './modules/insurance/insurance.service';
 import { InsuranceRepository } from './modules/insurance/insurance.repository';
+import { MedicationController } from './modules/medications/medication.controller';
+import { MedicationService } from './modules/medications/medication.service';
+import { MedicationRepository } from './modules/medications/medication.repository';
 import { NotificationController } from './modules/notifications/notification.controller';
 import { NotificationService } from './modules/notifications/notification.service';
 import { NotificationScheduler } from './modules/notifications/notification.scheduler';
@@ -39,6 +42,7 @@ import { HealthController } from './health.controller';
     MedicalController,
     VaccineController,
     InsuranceController,
+    MedicationController,
     NotificationController,
   ],
   providers: [
@@ -52,6 +56,8 @@ import { HealthController } from './health.controller';
     VaccineRepository,
     InsuranceService,
     InsuranceRepository,
+    MedicationService,
+    MedicationRepository,
     NotificationService,
     NotificationScheduler,
   ],

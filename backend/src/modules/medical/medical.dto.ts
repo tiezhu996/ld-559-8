@@ -1,5 +1,15 @@
-import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { VisitType } from '../../constants/enums';
+import { Type } from 'class-transformer';
+import { IsArray, IsDateString, IsEnum, IsInt, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { MedicationFrequency, VisitType } from '../../constants/enums';
+
+export class MedicalMedicationItemDto {
+  @IsString() name!: string;
+  @IsString() dosage!: string;
+  @IsEnum(MedicationFrequency) frequency!: MedicationFrequency;
+  @IsInt() @Min(1) durationDays!: number;
+  @IsDateString() startDate!: string;
+  @IsOptional() @IsString() notes?: string;
+}
 
 export class CreateMedicalDto {
   @IsString() petId!: string;
@@ -13,6 +23,7 @@ export class CreateMedicalDto {
   @IsNumber() cost!: number;
   @IsOptional() @IsDateString() nextVisitDate?: string;
   @IsOptional() @IsArray() attachments?: string[];
+  @IsOptional() @IsArray() @ValidateNested({ each: true }) @Type(() => MedicalMedicationItemDto) medications?: MedicalMedicationItemDto[];
 }
 
 export class UpdateMedicalDto extends CreateMedicalDto {}

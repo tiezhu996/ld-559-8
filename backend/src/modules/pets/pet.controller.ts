@@ -19,6 +19,11 @@ export class PetsController {
     return { code: 0, message: 'ok', data: await this.service.detail(id, req.user) };
   }
 
+  @Get(':id/medication-history')
+  async medicationHistory(@Param('id') id: string, @Req() req: any) {
+    return { code: 0, message: 'ok', data: await this.service.medicationHistory(id, req.user) };
+  }
+
   @Post()
   @AuditLog('添加宠物')
   async create(@Body() dto: CreatePetDto) {

@@ -20,6 +20,22 @@ export class PetService {
     return pet;
   }
 
+  async medicationHistory(id: string, user: { sub: string; role: UserRole }) {
+    const pet = await this.repo.findById(id);
+    if (!pet) throw new BusinessException('宠物不存在', 40401);
+    if (user.role === UserRole.PET_OWNER && pet.ownerId !== user.sub) throw new BusinessException('无权查看该宠物', 40302);
+
+    const grouped = new Map<string, Array<any>>();
+    for (const med of pet.medications) {
+      if (!grouped.has(med.name)) {
+        grouped.set(med.name, []);
+      }
+      grouped.get(med.name)!.push(med);
+    }
+
+    return Array.from(grouped.entries()).map(([name, records]) => ({ name, records }));
+  }
+
   create(dto: CreatePetDto) {
     validatePetWeight(dto);
     return this.repo.create({ ...dto, birthDate: new Date(dto.birthDate) });
